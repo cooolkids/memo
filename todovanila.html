@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEMO</title>
+    <link rel="stylesheet" href="./reset.css">
+    <style>
+         nav {
+            width: 200px;
+            height: 100%;
+            background: #bbbbbb;
+            position: absolute;
+            left: -200px;
+            top: 0;
+        }
+
+        ul.menu {
+            width: 90%;
+            position: absolute;
+            text-align: right;
+        }
+
+        ul.menu li {
+            font-size: 30px;
+            padding: 10px;
+        }
+
+        ul.menu li:hover{
+            color: #fff;
+        }
+
+        a.bar {
+            position: absolute;
+            display: inline-block;
+            right: -60px;
+            cursor: pointer;
+            top: 0;
+        }
+
+        .bar1,.bar2,.bar3 {
+            display: block;
+            width: 50px;
+            height: 2px;
+            background-color: #333;
+            margin: 10px 0;
+            transition: 0.4s;
+        }
+
+        a.bar.on .bar1{transform: translate(0, 12px) rotate(-45deg);}
+        
+        a.bar.on .bar2{opacity: 0;}
+        
+        a.bar.on .bar3{transform: translate(0, -12px) rotate(45deg);}
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .container {
+            width: 300px;
+            margin: 100px auto;
+        }
+
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        input,
+        #add-text[ type='text'
+
+        ] {
+            padding: 5px 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="menu">
+            <li>MEMO</li>
+            <li>LIST</li>
+            <li>TODO</li>
+            <li>CHECK</li>
+        </ul>
+        <a href="#" class="bar">
+            <span class="bar1"></span>
+            <span class="bar2"></span>
+            <span class="bar3"></span>
+        </a>
+    </nav>
+    <div class="container">
+        <h1>나의 할일</h1>
+        <input type="text" id="add-text">
+        <button id="add-button">추가</button>
+        <div class="container">
+            <p>할일목록</p>
+            <ul id="memo-list">
+
+            </ul>
+        </div>
+    </div>
+    <script src="./jquery-3.7.1min.js"></script>
+    <script>
+                let sw=0
+    $('a.bar').click(function(){
+        sw=!sw
+    
+        if(sw){
+             $(this).addClass('on')
+        $('nav').animate({"left":"0"})
+            
+        }else{
+            $(this).removeClass('on')
+            $('nav').animate({"left":"-200px"})
+        }
+        
+    })
+
+        const addButton=document.getElementById('add-button')
+        const addText=document.getElementById('add-text')
+        const memoList=document.getElementById('memo-list')
+        addText.focus()
+
+        addButton.addEventListener('click',function(){
+            const text=addText.value;
+            addText.value=''
+            const li=document.createElement('li')
+            li.classList.add('flex')
+            const p=document.createElement('p')
+
+            const div=document.createElement('div')
+            const deleteButton=document.createElement('button')
+            const editButton=document.createElement('button')
+
+            p.textContent=text
+            deleteButton.textContent='삭제'
+            deleteButton.classList.add('delete-button')
+            editButton.textContent='수정'
+            editButton.classList.add('edit-button')
+
+            li.appendChild(p)
+            li.appendChild(div)
+            div.appendChild(editButton)
+            div.appendChild(deleteButton)
+            memoList.appendChild(li)
+
+            deleteButton.addEventListener('click',function(){
+                li.parentNode.removeChild(li)
+            })
+            editButton.addEventListener('click',function(){
+                const currentText=p.textContent
+                const editInput=document.createElement('input')
+                editInput.type='text'
+                editInput.classList.add('edit-input')
+                editButton.value=currentText
+
+                const saveBtn=document.createElement('button')
+                saveBtn.textContent='저장'
+                saveBtn.classList.add('sav-btn')
+
+                p.style.display='none'
+                editButton.style.display='none'
+                deleteButton.style.display='none'
+                div.appendChild(editInput)
+                div.appendChild(saveBtn)
+
+                saveBtn.addEventListener('click',function(){
+                   const newText= editInput.value
+
+                   p.textContent=newText
+                   p.style.display='block'
+
+                   editInput.parentNode.removeChild(editInput)
+                   saveBtn.parentNode.removeChild(saveBtn)
+
+                   editButton.style.display='inline-block'
+                   deleteButton.style.display='inline-block'
+
+
+                })
+            })
+        })
+    </script>
+    
+</body>
+</html>
